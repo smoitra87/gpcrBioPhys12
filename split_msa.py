@@ -4,21 +4,25 @@ Split the MSA into different phylogenetic categories -
  * Chemokine receptors
  * Rhodopsin-like receptors
 
+WARNING :  If BLASTING again for some reason then, run the blast once 
+and without blast again. There is some issue with alignment being 
+overwritten during blasting. 
+
+
 """
 
 import sys,os
 
+import numpy as np
+
 import Bio
+from Bio import Alphabet
 from Bio import AlignIO
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.Align import AlignInfo
 from Bio.Blast import NCBIWWW
 from Bio.Blast import NCBIXML
-
-
-
-
 
 #----------------------------------------------------------------------
 # Definitions
@@ -33,6 +37,7 @@ msa_xml_path = os.path.join(DATA_DIR,msa_xml_file)
 E_VALUE = 10e-3
 HITLIST_SIZE = 1
 DO_BLAST = False
+DO_FILTER = False
 BUFFER_SIZE = 30
 adren_words = ('adrenergic','adrenoceptor')
 chemo_words = ('chemokine','cytokine')
@@ -41,8 +46,10 @@ chemo_words = ('chemokine','cytokine')
 # Intiial steps
 
 # Load the alignment
-aln = AlignIO.read(open(msa_path),"fasta")
+aln = AlignIO.read(open(msa_path),"fasta",\
+	alphabet=Alphabet.IUPAC.protein)
 print("Ranga alignment length is %d"%(aln.get_alignment_length()))
+
 
 if DO_BLAST : 
 
@@ -130,6 +137,32 @@ for seqr in aln :
 	else : 
 		raise ValueError("seq record name unknown %s"%(seqr.name))
 
+def calc_entropy(counts) : 
+	""" Calculates entropy based on a vector of counts"""
+	sum_c = sum(counts)
+
+
+#----------------------------------------------------------------------
+# Filter columns if necessary
+
+if DO_FILTER :
+	
+	info_cols = [] # Non conserved columns
+	# Filter columns according to entropy
+	for col_id in range(aln.get_alignment_length()) :
+		col = aln.get_column(col_id) 
+		ftab = {} # Freq table
+		for c in col :
+			ftab[c] = ftab.get(c,0) + 1
+		counts = ftab.values()
+		sum_c = sum(counts)
+		p = map(lambda x : (0.0+x)/sum_c,counts) # probabilities
+		e = -reduce(lambda x,y:x+y,map(lambda t:t[0]*t[1],\
+			zip(p,np.log(p))))
+	#	assert False
+	#	if e > ENTROPY_THRESH : 
+	#		info_cols.append(col_id)
+		info_cols.append(e)
 
 msa_path = os.path.join(DATA_DIR,"adrn_msa.fasta")
 SeqIO.write(adr_msa,msa_path,"fasta")
