@@ -28,4 +28,6 @@ pip-log.txt
 
 #My data
 data/
-
+*.mat
+*.list
+*.ids
