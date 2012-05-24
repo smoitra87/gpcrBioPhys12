@@ -1,8 +1,6 @@
 """  
-
 Generates mutants of GPCR sequences and finally outputs an alignment
 1U19 is used as the reference sequence
-
 """
 
 import os,sys,re
@@ -116,7 +114,7 @@ for row in rows :
 
 	mutseqs = refseqs[:pos-1]+mut+refseqs[pos:]
 	mutseqr = SeqRecord(seq=Seq(mutseqs),\
-		description="Mutant 1F88 seq",id="".join(line[0])\
+		description="Mutant 1F88 seq",id=str(pos)+mut\
 		,name="1F88")
 	mut_list.append(mutseqr)
 	
