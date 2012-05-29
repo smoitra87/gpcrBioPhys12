@@ -20,9 +20,12 @@ offset = length('_perm_and');
 
 commonf = strcat(['common_' adjf1(1:end-offset) '_'...
     adjf2(1:end-offset) '.dat']);
-fprintf('Common file is %s\n',commonf)
+fprintf('Common file is %s\n',commonf);
 
 common = adj_orig.*adj_new;
+fprintf('Percentage common edges: %f\n',length(find(common))/...
+    length(find(adj_new)));
+
 write_adj(commonf,common);
 
 % different edges

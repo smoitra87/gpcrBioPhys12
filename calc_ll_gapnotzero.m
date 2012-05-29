@@ -45,13 +45,13 @@ naa = 21;
 nodeWeights = squeeze(nodeWeights);
 naasq = naa*naa;
 
-% For the gap characters
-if (size(edgeWeights,1) ~= 1)
-    edgeWeights(naasq,:) = 0;
-else
-    edgeWeights(1,naasq) = 0;
-end
-nodeWeights(naa,:) = 0;
+% % For the gap characters
+% if (size(edgeWeights,1) ~= 1)
+%     edgeWeights(naasq,:) = 0;
+% else
+%     edgeWeights(1,naasq) = 0;
+% end
+% nodeWeights(naa,:) = 0;
 
 score_plot = zeros(length(testNdx),1);
 score_plot_node = zeros(length(testNdx),1);
@@ -260,13 +260,13 @@ if DO_SECTION == 1
         figure;
         %saveas(gcf,'scatter_oz.png','png')
         %fprintf('Corr coeff between gremlin and foldperc %f\n',R(2,1))
-        plot(sort(score_plot),'-or');
+        plot(sort(score_plot));
         hold on;
-        plot(sort(score_train_plot),'-ob');
+        plot(sort(score_train_plot),'g');
         xlabel('sequence id');
         ylabel('lieklihood gremlin');
         title('Plottign likelihood vs sequence id');
-        legend('Sorted HGMD seq','Sorted Blast Seq');
+        legend('Sorted Mutant seq','Sorted Blast Seq');
         %plot(score_plot_edge,'g');
         %plot(score_plot_node,'r');
     end;
