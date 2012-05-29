@@ -13,7 +13,7 @@ import glob;
 
 
 DATA_DIR='data'
-edgef = 'common_GPCR_ranga_adrn_pa.dat'
+edgef = 'common_GPCR_ranga_chemo.dat'
 edgepath = os.path.join(DATA_DIR,edgef);
 outfp = os.path.join(DATA_DIR,os.path.splitext(edgef)[0]+'.png')
 
